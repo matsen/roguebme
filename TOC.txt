@@ -1,8 +1,16 @@
+file types
+----------
+p_reduced4.info - gives info about construction of poly file WRT trees
+p_reduced4.poly - poly file defining the reduced polytope
+p_reduced4.sim_raw - simulation showing fraction of hits on each cone
+p_reduced4.sim_out - simulation after processing by cone_compatibility
+p_reduced4.trees - the trees. multiplicity is the collection of trees for a given cone
+p_reduced4.poly.00.poly - the 0th cone for the reduced polytope. has positive orthant constraints
+<anything>.poly.out - what comes out of dexml_poly.py.
+
 
 simulation
 ----------
-the simulation process is as follows
-
 0. run reduced to make the reduced cones
 
 1. run dexml_poly.py <reduced poly file> GRAPH to get the graph
@@ -20,16 +28,29 @@ the simulation process is as follows
 
 looking at structure of cones
 -----------------------------
+0 and 1 as above
 
-p_reduced4.poly.00.poly
+2. run write_pos_cones on the resulting .poly.out file, getting lots of files like p_reduced4.poly.00.poly
 
-file types
-----------
+3. run dexml_poly.py <cone file> VERTICES to get the vertices of the cones
 
-p_reduced4.info - gives info about construction of poly file WRT trees
-p_reduced4.poly - poly file defining the reduced polytope
-p_reduced4.sim_raw - simulation showing fraction of hits on each cone
-p_reduced4.sim_out - simulation after processing by cone_compatibility
-p_reduced4.trees - the trees. multiplicity is the collection of trees for a given cone
-p_reduced4.poly.00.poly - the 0th cone for the reduced polytope. has positive orthant constraints
-<anything>.poly.out - what comes out of dexml_poly.py.
+
+one run
+-------
+make (make reduced)
+make go
+mkdir analysis
+mv p_reduced* analysis
+cd analysis/
+dexml_poly.py p_reduced[45].poly GRAPH
+mkdir sim
+mkdir cone_struct
+../write_pos_cones.native p_reduced[45].poly.out
+mv *poly*poly cone_struct/
+cd analysis/
+cp *.poly.out *.trees sim/
+cd sim/
+../../simulate_cones.native -e 5 p_reduced4
+../../simulate_cones.native -e 5 p_reduced5
+../../cone_compatibility.native p_reduced4
+../../cone_compatibility.native p_reduced5
