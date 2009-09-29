@@ -1,0 +1,35 @@
+
+simulation
+----------
+the simulation process is as follows
+
+0. run reduced to make the reduced cones
+
+1. run dexml_poly.py <reduced poly file> GRAPH to get the graph
+
+2. simulate, finding the fraction of hits in each cone.
+   this is done by simulate_cones, and outputs in .sim_raw
+
+3. for each cone, calculate the number of splits in the lower tree that are compatible with all the splits associated with that cone
+   (there are some details about multiple trees per cone, but it's all the same)
+   call that number NC
+   make a table which is
+   NC   \t   total fraction of hits for all cones with the given NC value
+   this is done by cone_compatibility, and output is .sim_out
+
+
+looking at structure of cones
+-----------------------------
+
+p_reduced4.poly.00.poly
+
+file types
+----------
+
+p_reduced4.info - gives info about construction of poly file WRT trees
+p_reduced4.poly - poly file defining the reduced polytope
+p_reduced4.sim_raw - simulation showing fraction of hits on each cone
+p_reduced4.sim_out - simulation after processing by cone_compatibility
+p_reduced4.trees - the trees. multiplicity is the collection of trees for a given cone
+p_reduced4.poly.00.poly - the 0th cone for the reduced polytope. has positive orthant constraints
+<anything>.poly.out - what comes out of dexml_poly.py.
