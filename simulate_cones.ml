@@ -1,3 +1,8 @@
+(*
+ * give simulate_cones a prefix and it will read the poly.out and .trees files,
+ * then simulates using the exponential distribution of branch lengths on those
+ * cones. it makes a sim_raw file.
+ *)
 open MapsSets
 open Fam_batteries
 

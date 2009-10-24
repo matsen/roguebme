@@ -1,4 +1,5 @@
 (*
+ * we run this after simulate_cones.ml -- see TOC.txt
  * cone realizations = the collection of trees which have a given reduced cone
  *)
 
@@ -35,7 +36,6 @@ let how_many_compatible_with_given_list others given_l =
 let assert_same_and_hd = function
   | [] -> assert(false)
   | x::_ as l -> assert(ListFuns.all_same l); x
-
 
 let process_simulation prefix = 
   let (lower_tree, tree_list_list) =

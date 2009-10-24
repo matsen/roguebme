@@ -15,7 +15,9 @@ simulation
 
 1. run dexml_poly.py <reduced poly file> GRAPH to get the graph
 
-2. simulate, finding the fraction of hits in each cone.
+2. run vert_tree on the prefix to put the polymake information along with the trees corresponding to vertices in a .vert_tree file.
+
+3. simulate on the vert_tree file, finding the fraction of hits in each cone.
    this is done by simulate_cones, and outputs in .sim_raw
 
 3. for each cone, calculate the number of splits in the lower tree that are compatible with all the splits associated with that cone
