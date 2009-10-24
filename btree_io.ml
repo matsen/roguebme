@@ -18,6 +18,14 @@ let of_newick_str s =
 let list_of_newick_file fname =
   List.map of_newick_str (File_parsing.string_list_of_file fname)
 
+let parse_tree_list_list string_list = 
+  List.map
+    (fun trees_line ->
+      List.map
+        of_newick_str
+        (Str.split (Str.regexp "[ \t]+") trees_line))
+    string_list
+
 (* parse a trees file *)
 let parse_trees_file fname =
   match File_parsing.string_list_of_file fname with
@@ -31,12 +39,7 @@ let parse_trees_file fname =
       let lower_tree = 
         of_newick_str (Str.matched_group 1 lower_tree_line) in
       (lower_tree,
-        List.map
-          (fun trees_line ->
-            List.map
-              of_newick_str
-              (Str.split (Str.regexp "[ \t]+") trees_line))
-          upper_trees_lines)
+      parse_tree_list_list upper_trees_lines)
   | [] -> invalid_arg (fname^": no trees!")
 
 

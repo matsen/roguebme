@@ -80,9 +80,10 @@ let simulate_in_cones rand_gen_f pv_fname =
   assert(Array.length raw_results = List.length tree_strs);
   let ch_out = 
     open_out ((Filename.chop_extension pv_fname)^".sim_raw") in
+  Printf.fprintf ch_out "# simulated from %s\n" pv_fname;
   Printf.fprintf 
     ch_out
-    "# simulation with exponential distribution and 10^%d draws on %s\n"
+    "COMMENTS\nexponential distribution and 10^%d draws on %s\n"
     !n_draws_exp
     pv_fname;
   Printf.fprintf ch_out "\nRAW_SIM_VOL\n";

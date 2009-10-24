@@ -9,7 +9,8 @@ let prepend_q_to_vector x v = Array.append [|x|] v
 
 let whitespace = Str.regexp "[ \t]+"
 
-(* returns a string map from property name to string list with data *)
+(* returns a string map from property name to string list with data 
+ * there needs to be a comment line up top. *)
 let get_properties fname = 
   let unfiltered = 
     List.map
