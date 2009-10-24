@@ -44,8 +44,5 @@ let () = if not !Sys.interactive then begin
           (String.concat " " (List.map Btree.to_string tree_list)))
       fully_grouped;
     close_out tree_ch;)
-  [Trees.lower_tree4,  "p_reduced4";
-   Trees.lower_tree5,  "p_reduced5";
-   Trees.lower_tree6a, "p_reduced6a";
-   Trees.lower_tree6b, "p_reduced6b"]
+    Trees.all_trees;
   end
