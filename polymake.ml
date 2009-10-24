@@ -21,7 +21,7 @@ let get_properties fname =
   List.fold_right
     (function 
       | hd::tl -> 
-          print_endline ("found property "^hd); 
+          (* print_endline ("found property "^hd);  *)
           StringMap.add hd tl
       | _ -> assert(false))
     (List.filter (( <> ) []) unfiltered)

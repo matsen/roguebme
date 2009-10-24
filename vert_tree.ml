@@ -26,7 +26,6 @@ let make_vert_tree prefix =
     (Array.to_list points)
     tree_list_list;
   let out_ch = open_out (prefix^".vert_tree") in
-  Printf.fprintf out_ch "# lower tree: %s\n" (Btree.to_string lower_tree);
   let poly_ch = open_in poly_name in
   let rec write_poly_lines () = 
     try 
@@ -35,7 +34,9 @@ let make_vert_tree prefix =
     with End_of_file -> close_in poly_ch
   in
   write_poly_lines ();
-  Printf.fprintf out_ch "\nVERT_TREES\n";
+  Printf.fprintf out_ch "LOWER_TREE\n%s\n\n" 
+    (Btree.to_string lower_tree);
+  Printf.fprintf out_ch "VERT_TREES\n";
   Array.iter
     (fun v -> Printf.fprintf out_ch "%s\n" (Hashtbl.find h v))
     verts;

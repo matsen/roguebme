@@ -15,7 +15,7 @@ let parse_args () =
   "The base ten exponent for the number of draws used."
   and seed_opt = "-s", Arg.Set_int seed,
   "Specify a seed for MT19937 random number generation."
-  and usage = "simulate_cones prefix\n"
+  and usage = "simulate_cones polyvert_fname\n"
   and anon_arg arg =
     files := arg :: !files in
   let args = [ n_draws_exp_opt; seed_opt ] in
@@ -36,10 +36,14 @@ let rec pow10 e =
   if e <= 0 then 1
   else 10 * (pow10 (e-1))
 
-let simulate_in_cones rand_gen_f prefix = 
-  let q_cones = Cones_core.q_cones_of_fname (prefix^".poly.out")
-  and (lower_tree, tree_list_list) =
-    Btree_io.parse_trees_file (prefix^".trees") 
+let simulate_in_cones rand_gen_f pv_fname = 
+  let props = Polymake.get_properties pv_fname in
+  let q_cones = Cones_core.q_cones_of_props props
+  and lower_tree = 
+    Btree_io.of_newick_str 
+      (List.hd (StringMap.find "LOWER_TREE" props))
+  in
+  let tree_strs = StringMap.find "VERT_TREES" props 
   and n_draws = pow10 !n_draws_exp
   in
   let n_vars = Cones_core.n_vars_of_cone q_cones.(0) in
@@ -73,14 +77,20 @@ let simulate_in_cones rand_gen_f prefix =
   let raw_results = 
     Array.map (fun count -> Base.int_div count n_draws) counts
   in
-  assert(Array.length raw_results = List.length tree_list_list);
-  let ch_out = open_out (prefix^".sim_raw") in
+  assert(Array.length raw_results = List.length tree_strs);
+  let ch_out = 
+    open_out ((Filename.chop_extension pv_fname)^".sim_raw") in
   Printf.fprintf 
     ch_out
     "# simulation with exponential distribution and 10^%d draws on %s\n"
     !n_draws_exp
-    prefix;
+    pv_fname;
+  Printf.fprintf ch_out "\nRAW_SIM_VOL\n";
   Array.iter (fun x -> Printf.fprintf ch_out "%g\n" x) raw_results;
+  Printf.fprintf ch_out "\nLOWER_TREE\n%s\n"
+    (Btree.to_string lower_tree);
+  Printf.fprintf ch_out "\nVERT_TREES\n";
+  List.iter (fun s -> Printf.fprintf ch_out "%s\n" s) tree_strs;
   close_out ch_out
 
 
