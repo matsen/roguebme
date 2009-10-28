@@ -1,5 +1,7 @@
 (*
  * make a graph of the partial order of the vertices
+ * as argument, give it a prefix where a prefix.poly.out and a prefix.trees file
+ * live.
  *)
 
 
@@ -8,12 +10,6 @@ open Fam_batteries
 
 let parse_args () =
   let files  = ref [] in
-  (*
-  let n_draws_exp_opt = "-e", Arg.Set_int n_draws_exp,
-  "The base ten exponent for the number of draws used."
-  and seed_opt = "-s", Arg.Set_int seed,
-  "Specify a seed for MT19937 random number generation."
-  *)
   let usage = "po_graph prefix\n"
   and anon_arg arg =
     files := arg :: !files in
@@ -36,10 +32,16 @@ let write_graph prefix =
       (fun i j -> Array_po.compare_array points.(i) points.(j))
   in
   (* write to file *)
-  let ch = open_out (prefix^".po.dot") in
+  let ch = open_out (prefix^".po.dot")
+  and dom_ch = open_out (prefix^".domination") in
   Printf.fprintf ch "digraph g {\nrankdir=LR\n";
   let interesting = Array.make (Array.length points) false in
   let make_interesting i = interesting.(i) <- true in
+  let write_domination i j = 
+    Printf.fprintf dom_ch "[%s] > [%s]\n"
+      (Polymake.polymake_vect_of_q_vect points.(i))
+      (Polymake.polymake_vect_of_q_vect points.(j));
+  in
   (* write the graph *)
   Uptri.iterij 
     (fun i j -> function
@@ -48,10 +50,14 @@ let write_graph prefix =
       | Array_po.Comparable c ->
           make_interesting i;
           make_interesting j;
-          if c > 0 then
-            Printf.fprintf ch "\tp%d -> p%d\n" i j
-          else if c < 0 then
-          Printf.fprintf ch "\tp%d -> p%d\n" j i
+          if c > 0 then begin
+            Printf.fprintf ch "\tp%d -> p%d\n" i j;
+            write_domination i j
+          end
+          else if c < 0 then begin
+            Printf.fprintf ch "\tp%d -> p%d\n" j i;
+            write_domination j i
+          end
           else
             (* they are equal. this shouldn't happen *)
             assert(false))
@@ -64,6 +70,7 @@ let write_graph prefix =
     tree_strs;
   Printf.fprintf ch "}\n";
   close_out ch;
+  close_out dom_ch;
   ()
 
 let () =
