@@ -55,3 +55,4 @@ cd sim/
 ../vert_tree.native p_reduced4 p_reduced5 p_reduced6a p_reduced6b
 ../../simulate_cones.native -e 5 *.vert_tree
 ../../cone_compatibility.native *.sim_raw
+
