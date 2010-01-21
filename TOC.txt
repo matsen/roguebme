@@ -1,3 +1,7 @@
+
+note: bme_chambers.ml makes the chambers of the BME fan
+
+
 file types
 ----------
 p_reduced4.info - gives info about construction of poly file WRT trees
