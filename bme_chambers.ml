@@ -6,8 +6,13 @@ let facet_list_to_file fname fl =
   Polymake.write_q_vector_list ch fl;
   close_out ch
 
+let uptri_to_polymake_facet u = 
+  Array.map 
+    Num.num_of_int 
+    (Array.append [|0|] (Uptri.to_array u))
+
 let min_n_tips = 4
-and max_n_tips = 7
+and max_n_tips = 6
 
 let make_vertices n_tips = 
   let trees = Array.of_list (Btree.make_all_unrooted n_tips) in
@@ -24,7 +29,6 @@ let make_vertices n_tips =
   close_out ch;
   vertices
 
-
 let () = begin
   for n_tips = min_n_tips to max_n_tips do
     let pos_orthant = 
@@ -36,9 +40,10 @@ let () = begin
         facet_list_to_file 
           (Printf.sprintf "bme_t%d_vert%03d.poly" n_tips i)
           ((List.map 
-            (fun u -> Array.map Num.num_of_int (Uptri.to_array u))
+            uptri_to_polymake_facet
             (Bme.facets vertices i))
             @ pos_orthant))
       vertices;
   done
 end
+

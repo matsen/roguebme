@@ -1,5 +1,6 @@
 <common> : include
-<branchlen_partn.{byte,native,top}>: use_glpk
+<lp.{byte,native,top}>: use_glpk
+<bme_chambers.{byte,native,top}>: use_glpk
 <simulate_cones.{byte,native,top}>: use_gsl, use_bigarray
 <*.{byte,native,top}>: use_str,use_nums
 <**/*.cmo>: mltop

@@ -32,15 +32,33 @@ let solve objective objective_v lin_constraints var_constraints =
   | Glpk.No_primal_feasible_solution -> None
   | Glpk.No_dual_feasible_solution -> None
 
+let is_polytope_nonempty lin_constraints var_constraints = 
+  match 
+    solve  
+      Maximize
+      (Array.map (fun _ -> 1.) var_constraints)
+      lin_constraints
+      var_constraints
+  with
+  | Some _ -> true
+  | None -> false
+
   (*
-  let (x,v) = Lp.solve  
-            Lp.Maximize
-            [|10.; 6.; 4.|]
-            [
-              [|1.; 1.; 1.|], (-.infinity, 100.);
-              [|10.; 4.; 5.|],(-.infinity, 600.);
-              [|2.; 2.; 6.|], (-.infinity, 300.);
-	     ]
-	     [| 0., infinity; 0., infinity; 0., infinity|] in
-  Printf.printf "Z: %g    x0: %g    x1: %g    x2: %g\n%!" x v.(0) v.(1) v.(2)
+let () = begin
+  match 
+  Lp.solve  
+    Lp.Maximize
+    [|10.; 6.; 4.|]
+    [
+      [|1.; 1.; 1.|], (-.infinity, 100.);
+      [|10.; 4.; 5.|],(-.infinity, 600.);
+      [|2.; 2.; 6.|], (-.infinity, 300.);
+      ]
+    [| 0., infinity; 0., infinity; 0., infinity|]
+  with
+  | Some (x,v) ->
+      Printf.printf "Z: %g    x0: %g    x1: %g    x2: %g\n%!" x v.(0) v.(1) v.(2)
+  | None ->
+      Printf.printf "No solution!"
+end
 *)
