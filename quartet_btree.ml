@@ -30,5 +30,3 @@ let collect_quartets t =
 let qset_of_t t = Quartet.QSetFuns.of_list (collect_quartets t)
 
 let qdist t s = Quartet.qset_half_symdiff (qset_of_t t) (qset_of_t s)
-
-let x = Btree_io.of_newick_str

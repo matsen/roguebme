@@ -26,9 +26,9 @@ simulation
 
 4. for each cone, calculate the number of splits in the lower tree that are compatible with all the splits associated with that cone
    (there are some details about multiple trees per cone, but it's all the same)
-   call that number NC
+   call that number #C
    make a table which is
-   NC   \t   total fraction of hits for all cones with the given NC value
+   #C   \t   total fraction of hits for all cones with the given #C value
    this is done by cone_compatibility, and output is .sim_out
 
 
@@ -39,6 +39,12 @@ looking at structure of cones
 2. run write_pos_cones on the resulting .poly.out file, getting lots of files like p_reduced4.poly.00.poly
 
 3. run dexml_poly.py <cone file> VERTICES to get the vertices of the cones
+
+
+looking at the reduced cone quartet problem
+-------------------------------------------
+cone_quartet.ml -- tries to do the same thing as the cone_compatibility, but there was problem with multiple trees associated with a given quartet.
+bad_quartet_example.ml -- toplevel code to demonstrate the difference with trees from cone_quartet applied to lower trees on six taxa
 
 
 one run
@@ -59,4 +65,5 @@ cd sim/
 ../vert_tree.native p_reduced4 p_reduced5 p_reduced6a p_reduced6b
 ../../simulate_cones.native -e 5 *.vert_tree
 ../../cone_compatibility.native *.sim_raw
+
 

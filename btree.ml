@@ -30,6 +30,11 @@ let print t =
   ppr_btree Format.std_formatter t;
   Format.pp_print_newline Format.std_formatter ()
 
+let rec comb n = 
+  assert(n > 0);
+  if n = 1 then Leaf 0
+  else Node (comb (n-1), Leaf (n-1))
+
 let pair_cartesian_product la lb = 
   List.flatten (List.map (fun a -> List.map (fun b -> (a,b)) lb) la)
 
