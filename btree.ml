@@ -35,6 +35,24 @@ let rec comb n =
   if n = 1 then Leaf 0
   else Node (comb (n-1), Leaf (n-1))
 
+(* a comb can either be rooted at one of the ends, which is an end_comb, or it
+ * can be rooted in the middle, or it can be rooted at a pendant edge. 
+ * if it is rooted in the middle, then each side of the root is an end_comb. if
+ * it is rooted at a pendant edge, then it looks like  *)
+let is_comb t = 
+  let rec is_end_comb = function
+    | Node(Leaf _, b) -> is_end_comb b
+    | Node(a, Leaf _) -> is_end_comb a
+    | Leaf _ -> true
+    | _ -> false
+  in
+  match t with
+  | Node(Leaf _, Node(a,b)) (* rooted at pendant edge *)
+  | Node(Node(a,b), Leaf _) (* rooted at pendant edge *)
+  | Node(a,b) (* rooted at an internal edge *)
+    -> is_end_comb a && is_end_comb b
+  | Leaf _ -> true
+
 let pair_cartesian_product la lb = 
   List.flatten (List.map (fun a -> List.map (fun b -> (a,b)) lb) la)
 
